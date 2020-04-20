@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,11 +69,13 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         PokeApi pokeApi = retrofit.create(PokeApi.class);
-
+    Log.d("Clem", "BEFORE CALLBACK");
         Call<RestPokemonResponse> call = pokeApi.getPokemonResponse();
         call.enqueue(new Callback<RestPokemonResponse>() {
             @Override
             public void onResponse(Call<RestPokemonResponse> call, Response<RestPokemonResponse> response) {
+
+                Log.d("Clem", "INSIDE CALLBACK");
                 if(response.isSuccessful() && (response.body() != null)) {
 
                     List<Pokemon> pokemonList = response.body().getResults();
@@ -84,11 +87,11 @@ public class MainActivity extends AppCompatActivity {
 
 
             @Override
-            public void onFailure(Call<RestPokemonResponse> call, Throwable t) { showError();
+            public void onFailure(Call<RestPokemonResponse> call, Throwable t) {
                 showError();           
             }
         });
-
+Log.d("Clem", "AFTER CALLBACK");
     }
 
     private void showError() {
