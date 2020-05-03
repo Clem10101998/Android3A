@@ -28,8 +28,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    //private static final String BASE_URL = "https://pokeapi.co/";
-    private static final String BASE_URL = "https://raw.githubusercontent.com/Clem10101998/Android3A/master/";
+private static final String BASE_URL = "https://pokeapi.co/";
+   //private static final String BASE_URL = "https://raw.githubusercontent.com/Clem10101998/Android3A/master/";
     private RecyclerView recyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+       //Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
         showList();
         makeApiCall();
     }
@@ -70,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         PokeApi pokeApi = retrofit.create(PokeApi.class);
-    Log.d("Clem", "BEFORE CALLBACK");
+    //Log.d("Clem", "BEFORE CALLBACK");
         Call<RestPokemonResponse> call = pokeApi.getPokemonResponse();
         call.enqueue(new Callback<RestPokemonResponse>() {
             @Override
             public void onResponse(Call<RestPokemonResponse> call, Response<RestPokemonResponse> response) {
 
-                Log.d("Clem", "INSIDE CALLBACK");
+                //Log.d("Clem", "INSIDE CALLBACK");
                 if(response.isSuccessful() && (response.body() != null)) {
 
                     List<Pokemon> pokemonList = response.body().getResults();
@@ -89,10 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<RestPokemonResponse> call, Throwable t) {
-                showError();           
+
+                showError();
             }
         });
-Log.d("Clem", "AFTER CALLBACK");
+//Log.d("Clem", "AFTER CALLBACK");
     }
 
     private void showError() {
