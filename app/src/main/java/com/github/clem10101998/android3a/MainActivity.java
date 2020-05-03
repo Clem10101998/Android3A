@@ -28,8 +28,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-private static final String BASE_URL = "https://pokeapi.co/";
-   //private static final String BASE_URL = "https://raw.githubusercontent.com/Clem10101998/Android3A/master/";
+//private static final String BASE_URL = "https://pokeapi.co/";
+   private static final String BASE_URL = "https://raw.githubusercontent.com/Clem10101998/Android3A/master/";
     private RecyclerView recyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -38,23 +38,23 @@ private static final String BASE_URL = "https://pokeapi.co/";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
        //Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
-        showList();
+        //showList();
         makeApiCall();
     }
 
-    private void showList() {
+    private void showList(List<Pokemon> pokemonList) {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        List<String> input = new ArrayList<>();
+        /*List<String> input = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             input.add("Test" + i);
-        }
+        }*/
         // define an adapter
-        mAdapter = new ListAdapter(input);
+        mAdapter = new ListAdapter(pokemonList);
         recyclerView.setAdapter(mAdapter);
 
     }
@@ -80,7 +80,8 @@ private static final String BASE_URL = "https://pokeapi.co/";
                 if(response.isSuccessful() && (response.body() != null)) {
 
                     List<Pokemon> pokemonList = response.body().getResults();
-                    Toast.makeText(getApplicationContext(), "API Success", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "API Success", Toast.LENGTH_SHORT).show();
+                    showList(pokemonList);
                 }else{
                     showError();
                     }
