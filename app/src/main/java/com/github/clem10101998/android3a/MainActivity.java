@@ -1,5 +1,7 @@
 package com.github.clem10101998.android3a;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,14 +35,34 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
        //Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
         //showList();
+        sharedPreferences = getSharedPreferences("application_esiea", Context.MODE_PRIVATE);
+        gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        /*List<Pokemon> pokemonList = getDataFromCache();
+        if ( pokemonList!= null){
+        showList(pokemonList);
+        }else{
+            makeApiCall();
+        }*/
         makeApiCall();
     }
+
+    /*private List<Pokemon> getDataFromCache() {
+        sharedPreferences
+                .edit()
+                .putString("jsonPokemonList", jsonString)
+                .apply();
+        String jsonString = gson.toJson(pokemonList);
+    }*/
 
     private void showList(List<Pokemon> pokemonList) {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -60,10 +82,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeApiCall(){
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -81,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
                     List<Pokemon> pokemonList = response.body().getResults();
                     //Toast.makeText(getApplicationContext(), "API Success", Toast.LENGTH_SHORT).show();
+                    saveList(pokemonList);
                     showList(pokemonList);
                 }else{
                     showError();
@@ -95,6 +114,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //Log.d("Clem", "AFTER CALLBACK");
+    }
+
+    private void saveList(List<Pokemon> pokemonList) {
+       String jsonString = gson.toJson(pokemonList);
+        sharedPreferences
+                .edit()
+                .putString("jsonPokemonList", jsonString)
+                .apply();
+        Toast.makeText(getApplicationContext(), "List saved", Toast.LENGTH_SHORT).show();
     }
 
     private void showError() {
